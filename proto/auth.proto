@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/protobuf/timestamp.proto";
+
+
+service ProtoUserService {
+    rpc createUser (ProtoCreateUserDto) returns (ProtoUser) {}
+    rpc findAllUsers (Empty) returns (ProtoUsers) {}
+    rpc findOneUser (ProtoFindOneUserDto) returns (ProtoUser) {}
+    rpc updateOneUser (ProtoUpdateUserDto) returns (ProtoUser) {}
+    rpc removeUser (ProtoFindOneUserDto) returns (ProtoUser) {}
+}
+
+message ProtoUpdateUserDto {
+    int32 id = 1;
+
+}
+
+message ProtoFindOneUserDto {
+    int32 id = 1;
+}
+
+message Empty {}
+
+message ProtoUsers {
+    repeated ProtoUser users = 1;
+}
+
+message ProtoCreateUserDto {
+    string firstName = 1;
+    string lastName = 2;
+    string userName = 3;
+    string email = 4;
+    string password = 5;
+    google.protobuf.Timestamp dateOfBirth = 6;
+    optional string photo = 7;
+}
+
+message ProtoUser {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string userName = 4;
+    string email = 5;
+    string password = 6;
+    google.protobuf.Timestamp dateOfBirth = 7;
+    optional string photo = 8;
+    ProtoUserRole role = 9;
+    optional google.protobuf.Timestamp passwordChangedAt = 10;
+    optional string passwordResetToken = 11;
+    bool active = 12;
+    optional google.protobuf.Timestamp passwordResetExpires = 13;
+    google.protobuf.Timestamp createdAt = 14;
+}
+
+enum ProtoUserRole {
+    USER = 0;
+    ADMIN = 1;
+}
+
+// enum UserRole {
+//   USER = "USER";
+//   ADMIN = "ADMIN";
+// }

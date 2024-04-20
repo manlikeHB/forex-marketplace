@@ -1,10 +1,31 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { UserModule } from './user/user.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+// import { join } from 'path';
+import { User } from './user/entities/user.entity';
 
 @Module({
-  imports: [],
-  controllers: [AuthController],
-  providers: [AuthService],
+  imports: [
+    UserModule,
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        // entities: [join(process.cwd(), 'dist/**/*.entity.js')],
+        entities: [User],
+        synchronize: true, //FIXME disable later, to avoid automatically updating the database
+      }),
+    }),
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AuthModule {}
