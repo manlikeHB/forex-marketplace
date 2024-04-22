@@ -2,11 +2,9 @@ import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   UserServiceController,
-  CreateUserDto,
   UpdateUserDto,
   UserServiceControllerMethods,
   FindOneUserDto,
-  Users,
 } from '@app/common';
 
 @Controller()
@@ -14,11 +12,11 @@ import {
 export class UserController implements UserServiceController {
   constructor(private readonly userService: UserService) {}
 
-  createUser(createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+  // createUser(createUserDto: CreateUserDto) {
+  //   return this.userService.create(createUserDto);
+  // }
 
-  findAllUsers(): Promise<Users> {
+  findAllUsers() {
     return this.userService.findAll();
   }
 

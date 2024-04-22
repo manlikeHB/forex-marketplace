@@ -2,7 +2,7 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
-export const protobufPackage = "auth";
+export const protobufPackage = "user";
 
 export enum UserRole {
   USER = 0,
@@ -52,11 +52,9 @@ export interface User {
   createdAt: string;
 }
 
-export const AUTH_PACKAGE_NAME = "auth";
+export const USER_PACKAGE_NAME = "user";
 
 export interface UserServiceClient {
-  createUser(request: CreateUserDto): Observable<User>;
-
   findAllUsers(request: Empty): Observable<Users>;
 
   findOneUser(request: FindOneUserDto): Observable<User>;
@@ -67,8 +65,6 @@ export interface UserServiceClient {
 }
 
 export interface UserServiceController {
-  createUser(request: CreateUserDto): Promise<User> | Observable<User> | User;
-
   findAllUsers(request: Empty): Promise<Users> | Observable<Users> | Users;
 
   findOneUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
@@ -80,7 +76,7 @@ export interface UserServiceController {
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createUser", "findAllUsers", "findOneUser", "updateOneUser", "removeUser"];
+    const grpcMethods: string[] = ["findAllUsers", "findOneUser", "updateOneUser", "removeUser"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);

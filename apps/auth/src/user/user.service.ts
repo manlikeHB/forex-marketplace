@@ -2,7 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto, Users, UpdateUserDto } from '@app/common';
+import { UpdateUserDto } from '@app/common';
+import { DateTime } from 'luxon';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class UserService {
@@ -10,43 +12,43 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  convertTime(createUserDto) {
-    return new Date(createUserDto.dateOfBirth).toISOString();
+  convertTimeStringToDate(dateOfBirth) {
+    const parsedDate = DateTime.fromFormat(dateOfBirth, 'yyyy-LL-dd HH:mm:ss'); // Adjust format if necessary
+
+    // Set the time zone explicitly if needed (optional)
+    const utcDate = parsedDate.setZone('utc'); // Set to UTC time zone (adjust if needed)
+
+    return utcDate.toJSDate();
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const newUser = {
-      firstName: createUserDto.firstName,
-      lastName: createUserDto.lastName,
-      userName: createUserDto.userName,
-      email: createUserDto.email,
-      password: createUserDto.password,
-      dateOfBirth: this.convertTime(createUserDto),
-      photo: createUserDto.photo,
-      role: undefined,
-      passwordChangedAt: undefined,
-      passwordResetToken: undefined,
-      active: undefined,
-      passwordResetExpires: undefined,
-      createdAt: undefined,
-    };
+  // async create(createUserDto: CreateUserDto): Promise<User> {
+  //   const user = this.userRepository.create({
+  //     ...createUserDto,
+  //     dateOfBirth: this.convertTimeStringToDate(createUserDto.dateOfBirth),
+  //   });
 
-    const user = this.userRepository.create(newUser);
+  //   const newUser = await this.userRepository.save(user);
 
-    return await this.userRepository.save(user);
-  }
+  //   return newUser;
+  // }
 
-  async findAll(): Promise<Users> {
+  async findAll() {
     const users = await this.userRepository.find();
 
     return { users };
   }
 
-  async findOne(id: number): Promise<User> {
-    return this, this.userRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new RpcException('No user with that id!');
+    }
+
+    return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
 
     if (!user) {
@@ -58,7 +60,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async remove(id: number): Promise<User> {
+  async remove(id: number) {
     const user = await this.findOne(id);
 
     if (!user) {

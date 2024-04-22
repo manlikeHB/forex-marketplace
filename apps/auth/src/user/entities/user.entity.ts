@@ -27,7 +27,7 @@ export class User {
   password: string;
 
   @Column({ type: 'timestamp with time zone' })
-  dateOfBirth: Date;
+  dateOfBirth: string;
 
   @Column({ nullable: true })
   photo: string;
@@ -36,7 +36,7 @@ export class User {
   role: UserRole;
 
   @Column({ type: 'timestamp with time zone', nullable: true })
-  passwordChangedAt: Date;
+  passwordChangedAt: string;
 
   @Column({ nullable: true })
   passwordResetToken: string;
@@ -45,8 +45,11 @@ export class User {
   active: boolean;
 
   @Column({ type: 'timestamp with time zone', nullable: true })
-  passwordResetExpires: Date;
+  passwordResetExpires: string;
 
-  @Column({ type: 'timestamp with time zone', default: new Date(Date.now()) })
-  createdAt: Date;
+  @Column({
+    type: 'timestamp with time zone',
+    default: () => 'now()',
+  })
+  createdAt: string;
 }
