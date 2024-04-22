@@ -10,8 +10,14 @@ service UserService {
     rpc removeUser (FindOneUserDto) returns (User) {}
 }
 
+// Add photo 
 message UpdateUserDto {
     int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string userName = 4;
+    string email = 5;
+    optional string photo = 6;
 
 }
 

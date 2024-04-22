@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package auth;
+
+
+service UserService {
+    rpc signUp (SignUpDto) returns (SendTokenAndData) {}
+    rpc login (LoginDto) returns (SendTokenAndData) {}
+    rpc forgotPassword (ForgotPasswordDto) returns (ForgotPasswordRes) {}
+    rpc resetPassword (ResetPasswordDto) returns (SendTokenAndData) {}
+}
+
+message Empty {}
+
+message SignUpDto {
+    string firstName = 1;
+    string lastName = 2;
+    string userName = 3;
+    string email = 4;
+    string password = 5;
+    string passwordConfirm = 6;
+    string dateOfBirth = 7;
+}
+
+message LoginDto {
+    optional string userName = 1;
+    optional string email = 2;
+    string password = 3;
+}
+
+message SendTokenAndData {
+    string status = 1;
+    string token = 2;
+    Data data = 3;
+}
+
+message ForgotPasswordDto {
+    string email = 1; 
+}
+
+message ResetPasswordDto {
+    string password = 1;
+    string passwordConfirm = 2;
+}
+
+message ForgotPasswordRes {
+    string status = 1;
+    string message = 2;
+}
+
+message Data {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string userName = 4;
+    string email = 5;
+    string dateOfBirth = 7;
+    optional string photo = 8;
+    string role = 9;
+    bool active = 12;
+    string createdAt = 14;
+}
