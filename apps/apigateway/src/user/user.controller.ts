@@ -1,8 +1,22 @@
-import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from '@app/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Post,
+} from '@nestjs/common';
+import {
+  LoginDto,
+  SignUpDto,
+  UpdateUserDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from '@app/common';
 
-@Controller('user')
+@Controller('auth')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -24,5 +38,25 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Post('/login')
+  login(@Body() body: LoginDto) {
+    return this.userService.login(body);
+  }
+
+  @Post('/signup')
+  signUp(@Body() body: SignUpDto) {
+    return this.userService.signUp(body);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.userService.forgotPassword(body);
+  }
+
+  @Post('reset-password')
+  resetPassword(@Body() body: ResetPasswordDto) {
+    return this.userService.resetPassword(body);
   }
 }

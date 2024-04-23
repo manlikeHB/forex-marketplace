@@ -1,5 +1,9 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import {
+  ForgotPasswordDto,
+  LoginDto,
+  ResetPasswordDto,
+  SignUpDto,
   USER_SERVICE_NAME,
   UpdateUserDto,
   UserServiceClient,
@@ -32,5 +36,21 @@ export class UserService implements OnModuleInit {
 
   remove(id: number) {
     return this.userService.removeUser({ id });
+  }
+
+  login(loginDto: LoginDto) {
+    return this.userService.login(loginDto);
+  }
+
+  signUp(signUpDto: SignUpDto) {
+    return this.userService.signUp(signUpDto);
+  }
+
+  resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return this.userService.resetPassword(resetPasswordDto);
+  }
+
+  forgotPassword(forgotPassword: ForgotPasswordDto) {
+    return this.userService.forgotPassword(forgotPassword);
   }
 }

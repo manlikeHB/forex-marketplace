@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -26,6 +26,6 @@ import { User } from './user/entities/user.entity';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [Logger],
 })
 export class AuthModule {}

@@ -2,7 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { UpdateUserDto } from '@app/common';
+import {
+  LoginDto,
+  ResetPasswordDto,
+  SignUpDto,
+  UpdateUserDto,
+} from '@app/common';
 import { DateTime } from 'luxon';
 import { RpcException } from '@nestjs/microservices';
 
@@ -20,17 +25,6 @@ export class UserService {
 
     return utcDate.toJSDate();
   }
-
-  // async create(createUserDto: CreateUserDto): Promise<User> {
-  //   const user = this.userRepository.create({
-  //     ...createUserDto,
-  //     dateOfBirth: this.convertTimeStringToDate(createUserDto.dateOfBirth),
-  //   });
-
-  //   const newUser = await this.userRepository.save(user);
-
-  //   return newUser;
-  // }
 
   async findAll() {
     const users = await this.userRepository.find();
@@ -68,5 +62,38 @@ export class UserService {
     }
 
     return this.userRepository.remove(user);
+  }
+
+  res = {
+    status: 'success',
+    token: 'fghjk',
+    data: {
+      id: 1,
+      firstName: 'joe',
+      lastName: 'ok',
+      userName: 'ok',
+      email: 'ok',
+      dateOfBirth: 'ok',
+      photo: 'ok',
+      role: 'ok',
+      active: true,
+      createdAt: 'ok',
+    },
+  };
+
+  async login(loginDto: LoginDto) {
+    return this.res;
+  }
+
+  async signUp(signUpDto: SignUpDto) {
+    return this.res;
+  }
+
+  async forgotPassword(email: string) {
+    return { status: 'ok', message: 'ok' };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return this.res;
   }
 }

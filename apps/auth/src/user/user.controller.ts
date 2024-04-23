@@ -5,6 +5,10 @@ import {
   UpdateUserDto,
   UserServiceControllerMethods,
   FindOneUserDto,
+  SignUpDto,
+  LoginDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
 } from '@app/common';
 
 @Controller()
@@ -16,8 +20,8 @@ export class UserController implements UserServiceController {
   //   return this.userService.create(createUserDto);
   // }
 
-  findAllUsers() {
-    return this.userService.findAll();
+  async findAllUsers() {
+    return await this.userService.findAll();
   }
 
   findOneUser(findOneUserDto: FindOneUserDto) {
@@ -30,5 +34,21 @@ export class UserController implements UserServiceController {
 
   removeUser(findOneUserDto: FindOneUserDto) {
     return this.userService.remove(findOneUserDto.id);
+  }
+
+  signUp(signupdto: SignUpDto) {
+    return this.userService.signUp(signupdto);
+  }
+
+  async login(loginDto: LoginDto) {
+    return await this.userService.login(loginDto);
+  }
+
+  forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    return this.userService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return this.userService.resetPassword(resetPasswordDto);
   }
 }
