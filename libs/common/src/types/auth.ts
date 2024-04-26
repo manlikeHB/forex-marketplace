@@ -4,12 +4,6 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "auth";
 
-export enum UserRole {
-  USER = 0,
-  ADMIN = 1,
-  UNRECOGNIZED = -1,
-}
-
 export interface Empty {
 }
 
@@ -98,7 +92,7 @@ export interface User {
   password: string;
   dateOfBirth: string;
   photo?: string | undefined;
-  role: UserRole;
+  role: string;
   passwordChangedAt?: string | undefined;
   passwordResetToken?: string | undefined;
   active: boolean;
