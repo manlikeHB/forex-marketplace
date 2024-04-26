@@ -102,15 +102,10 @@ message User {
     string password = 6;
     string dateOfBirth = 7;
     optional string photo = 8;
-    UserRole role = 9;
+    string role = 9;
     optional string passwordChangedAt = 10;
     optional string passwordResetToken = 11;
     bool active = 12;
     optional string passwordResetExpires = 13;
     string createdAt = 14;
-}
-
-enum UserRole {
-    USER = 0;
-    ADMIN = 1;
 }

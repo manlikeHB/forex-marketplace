@@ -16,10 +16,6 @@ import {
 export class UserController implements UserServiceController {
   constructor(private readonly userService: UserService) {}
 
-  // createUser(createUserDto: CreateUserDto) {
-  //   return this.userService.create(createUserDto);
-  // }
-
   async findAllUsers() {
     return await this.userService.findAll();
   }
@@ -36,8 +32,8 @@ export class UserController implements UserServiceController {
     return this.userService.remove(findOneUserDto.id);
   }
 
-  signUp(signupdto: SignUpDto) {
-    return this.userService.signUp(signupdto);
+  async signUp(signupdto: SignUpDto) {
+    return await this.userService.signUp(signupdto);
   }
 
   async login(loginDto: LoginDto) {

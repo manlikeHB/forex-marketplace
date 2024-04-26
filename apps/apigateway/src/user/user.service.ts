@@ -9,7 +9,8 @@ import {
   UserServiceClient,
 } from '@app/common';
 import { AUTH_SERVICE } from './constants';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, RpcException } from '@nestjs/microservices';
+import { catchError } from 'rxjs';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -43,7 +44,11 @@ export class UserService implements OnModuleInit {
   }
 
   signUp(signUpDto: SignUpDto) {
-    return this.userService.signUp(signUpDto);
+    return this.userService.signUp(signUpDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   resetPassword(resetPasswordDto: ResetPasswordDto) {

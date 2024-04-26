@@ -1,10 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UserRole } from '@app/common';
 
-// enum UserRoleType {
-//   USER = 'user',
-//   ADMIN = 'admin',
-// }
+export enum UserRoleType {
+  USER = 'user',
+  ADMIN = 'admin',
+}
 
 @Entity()
 export class User {
@@ -26,14 +25,14 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'timestamp with time zone' })
+  @Column({ type: 'date' })
   dateOfBirth: string;
 
   @Column({ nullable: true })
   photo: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-  role: UserRole;
+  @Column({ type: 'enum', enum: UserRoleType, default: UserRoleType.USER })
+  role: UserRoleType;
 
   @Column({ type: 'timestamp with time zone', nullable: true })
   passwordChangedAt: string;
