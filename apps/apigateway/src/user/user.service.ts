@@ -40,7 +40,11 @@ export class UserService implements OnModuleInit {
   }
 
   login(loginDto: LoginDto) {
-    return this.userService.login(loginDto);
+    return this.userService.login(loginDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   signUp(signUpDto: SignUpDto) {

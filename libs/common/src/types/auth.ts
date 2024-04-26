@@ -1,11 +1,10 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "auth";
+export const protobufPackage = 'auth';
 
-export interface Empty {
-}
+export interface Empty {}
 
 export interface SignUpDto {
   firstName: string;
@@ -100,7 +99,7 @@ export interface User {
   createdAt: string;
 }
 
-export const AUTH_PACKAGE_NAME = "auth";
+export const AUTH_PACKAGE_NAME = 'auth';
 
 export interface UserServiceClient {
   signUp(request: SignUpDto): Observable<SendTokenAndData>;
@@ -121,21 +120,41 @@ export interface UserServiceClient {
 }
 
 export interface UserServiceController {
-  signUp(request: SignUpDto): Promise<SendTokenAndData> | Observable<SendTokenAndData> | SendTokenAndData;
+  signUp(
+    request: SignUpDto,
+  ):
+    | Promise<SendTokenAndData>
+    | Observable<SendTokenAndData>
+    | SendTokenAndData;
 
-  login(request: LoginDto): Promise<SendTokenAndData> | Observable<SendTokenAndData> | SendTokenAndData;
+  login(
+    request: LoginDto,
+  ):
+    | Promise<SendTokenAndData>
+    | Observable<SendTokenAndData>
+    | SendTokenAndData;
 
   forgotPassword(
     request: ForgotPasswordDto,
-  ): Promise<ForgotPasswordRes> | Observable<ForgotPasswordRes> | ForgotPasswordRes;
+  ):
+    | Promise<ForgotPasswordRes>
+    | Observable<ForgotPasswordRes>
+    | ForgotPasswordRes;
 
-  resetPassword(request: ResetPasswordDto): Promise<SendTokenAndData> | Observable<SendTokenAndData> | SendTokenAndData;
+  resetPassword(
+    request: ResetPasswordDto,
+  ):
+    | Promise<SendTokenAndData>
+    | Observable<SendTokenAndData>
+    | SendTokenAndData;
 
   findAllUsers(request: Empty): Promise<Users> | Observable<Users> | Users;
 
   findOneUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
 
-  updateOneUser(request: UpdateUserDto): Promise<User> | Observable<User> | User;
+  updateOneUser(
+    request: UpdateUserDto,
+  ): Promise<User> | Observable<User> | User;
 
   removeUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
 }
@@ -143,25 +162,39 @@ export interface UserServiceController {
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "signUp",
-      "login",
-      "forgotPassword",
-      "resetPassword",
-      "findAllUsers",
-      "findOneUser",
-      "updateOneUser",
-      "removeUser",
+      'signUp',
+      'login',
+      'forgotPassword',
+      'resetPassword',
+      'findAllUsers',
+      'findOneUser',
+      'updateOneUser',
+      'removeUser',
     ];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method,
+      );
+      GrpcMethod('UserService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("UserService", method)(constructor.prototype[method], method, descriptor);
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method,
+      );
+      GrpcStreamMethod('UserService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const USER_SERVICE_NAME = "UserService";
+export const USER_SERVICE_NAME = 'UserService';

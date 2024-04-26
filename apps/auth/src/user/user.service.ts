@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -18,7 +19,7 @@ import { DateTime } from 'luxon';
 import { RpcException } from '@nestjs/microservices';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
-import { mapUserRoleToEntityType } from '@app/common';
+import { sendTokenAndData } from './helper';
 
 const scrypt = promisify(_scrypt);
 
@@ -153,20 +154,56 @@ export class UserService {
 
     const res = await this.create(newUser);
 
-    const data = {
-      ...res,
-      password: undefined,
-      passwordChangedAt: undefined,
-      passwordResetToken: undefined,
-      passwordResetExpires: undefined,
-      role: 'user',
-    };
-
-    return { status: 'success', token: 'token', data };
+    return sendTokenAndData(res);
   }
 
-  async login(loginDto: LoginDto) {
-    return this.res;
+  async login(loginDto: LoginDto): Promise<SendTokenAndData> {
+    const { email, userName, password } = loginDto;
+
+    // Check if username or email and password are provided
+    if (email || userName) {
+      if (!password) {
+        throw new RpcException(
+          new BadRequestException('Please provide a valid login details!'),
+        );
+      }
+    } else {
+      throw new RpcException(
+        new BadRequestException('Please provide a valid login details!'),
+      );
+    }
+
+    const user = await this.userRepository.findOne({
+      where: [{ email }, { userName }],
+    });
+
+    console.log({ user });
+
+    if (email && !user) {
+      throw new RpcException(
+        new BadRequestException('Invalid email or password!'),
+      );
+    }
+
+    if (userName && !user) {
+      throw new RpcException(
+        new BadRequestException('Invalid username or password!'),
+      );
+    }
+
+    // Get salt and hashed password
+    const [salt, hashedPassword] = user.password.split('.');
+
+    // Hash password from loginDto with same salt and compare
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+    if (hashedPassword !== hash.toString('hex')) {
+      throw new RpcException(
+        new UnauthorizedException('Invalid login details!'),
+      );
+    }
+
+    return sendTokenAndData(user);
   }
 
   async forgotPassword(email: string) {
